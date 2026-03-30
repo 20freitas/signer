@@ -1,65 +1,46 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex flex-col min-h-screen bg-background text-text-primary">
+      <header className="px-8 py-6 flex flex-col sm:flex-row justify-between items-center sm:gap-0 gap-4 border-b border-border/50 bg-white/50 backdrop-blur-md">
+        <div className="font-bold text-2xl tracking-tight flex items-center gap-2">
+          <div className="w-8 h-8 rounded-md bg-accent shrink-0 flex items-center justify-center text-sm text-white">S</div>
+          Signer
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="flex items-center gap-4">
+          <Link href="/login" className="text-sm font-medium hover:text-accent transition-colors">Entrar</Link>
+          <Link href="/signup">
+            <Button className="bg-primary text-white hover:bg-primary-light">Criar Conta</Button>
+          </Link>
+        </div>
+      </header>
+
+      <main className="flex-1 max-w-5xl mx-auto w-full px-6 flex flex-col items-center justify-center text-center mt-20 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 max-w-4xl text-balance">
+          O portal profissional para o seu estúdio criativo.
+        </h1>
+        <p className="text-xl text-text-secondary mb-10 max-w-2xl text-balance">
+          Faça a gestão dos seus clientes, organize projetos e partilhe ficheiros com uma interface incrivelmente limpa. Feito à medida para freelancers.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link href="/signup">
+            <Button size="lg" className="bg-primary hover:bg-primary-light text-white text-base h-12 px-8 w-full">Começar Gratuitamente</Button>
+          </Link>
+          <Link href="#features">
+            <Button size="lg" variant="outline" className="text-base h-12 px-8 w-full">Ver Funcionalidades</Button>
+          </Link>
         </div>
       </main>
+
+      <footer className="py-8 text-center text-sm text-text-secondary border-t border-border/50 mt-auto">
+        <p>&copy; {new Date().getFullYear()} Signer. Todos os direitos reservados.</p>
+        <div className="flex justify-center gap-4 mt-2">
+          <Link href="/privacidade" className="hover:underline">Privacidade</Link>
+          <Link href="/termos" className="hover:underline">Termos</Link>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
