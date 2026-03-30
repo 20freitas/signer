@@ -2,9 +2,10 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CalendarIcon, Clock, Link as LinkIcon } from 'lucide-react'
+import { CalendarIcon, Clock, Link as LinkIcon, Target } from 'lucide-react'
 import { ProjectMessages } from './ProjectMessages'
 import { ProjectFiles } from './ProjectFiles'
+import { ProjectDeliverables } from './ProjectDeliverables'
 
 export default async function ProjectDetailPage({ params }: { params: { id: string } }) {
   const supabase = await createClient()
@@ -33,13 +34,18 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
         <p className="text-text-secondary mt-1">Cliente: {project.clients?.name}</p>
       </div>
 
-      <Tabs defaultValue="detalhes" className="w-full mt-8">
-        <TabsList className="grid w-full max-w-md grid-cols-3">
+      <Tabs defaultValue="entregas" className="w-full mt-8">
+        <TabsList className="grid w-full max-w-2xl grid-cols-4">
+          <TabsTrigger value="entregas">Metas & Entregas</TabsTrigger>
           <TabsTrigger value="detalhes">Detalhes</TabsTrigger>
           <TabsTrigger value="ficheiros">Ficheiros</TabsTrigger>
           <TabsTrigger value="mensagens">Mensagens</TabsTrigger>
         </TabsList>
         
+        <TabsContent value="entregas" className="mt-6">
+          <ProjectDeliverables projectId={project.id} userId={user.id} />
+        </TabsContent>
+
         <TabsContent value="detalhes" className="mt-6 space-y-6">
           <Card className="border-0 shadow-card-subtle bg-surface">
             <CardHeader>

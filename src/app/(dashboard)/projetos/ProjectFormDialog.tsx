@@ -42,7 +42,7 @@ export function ProjectFormDialog({ clients, triggerVariant = 'default' }: { cli
       if (error) throw error
 
       setOpen(false)
-      router.push(`/dashboard/projetos/${project.id}`)
+      router.push(`/projetos/${project.id}`)
     } catch (err: any) {
       console.error(err)
       alert(err.message || 'Erro ao criar projeto.')
