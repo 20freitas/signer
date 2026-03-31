@@ -10,16 +10,22 @@ interface MetricCardProps {
 
 export function MetricCard({ title, value, icon: Icon, description }: MetricCardProps) {
   return (
-    <Card className="border-0 shadow-card-subtle bg-surface">
+    <Card className="border-0 shadow-sm bg-white rounded-3xl p-1 overflow-hidden group hover:shadow-md transition-all duration-300">
       <CardContent className="p-6">
-        <div className="flex items-center justify-between space-y-0 pb-2">
-          <p className="text-sm font-medium text-text-secondary">{title}</p>
-          <Icon className="h-5 w-5 text-primary" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+            <Icon className="h-6 w-6 text-primary" />
+          </div>
+          {description && (
+            <span className="text-[10px] font-black uppercase tracking-widest text-text-secondary opacity-40 leading-none">
+              {description}
+            </span>
+          )}
         </div>
-        <div className="text-2xl font-bold">{value}</div>
-        {description && (
-          <p className="text-xs text-text-secondary mt-1">{description}</p>
-        )}
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-text-secondary uppercase tracking-tight">{title}</h3>
+          <div className="text-4xl font-black text-text-primary tracking-tight">{value}</div>
+        </div>
       </CardContent>
     </Card>
   )
