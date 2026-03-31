@@ -70,7 +70,9 @@ export default async function SlugProjectPage({
         }
         .bg-brand-soft { background-color: color-mix(in srgb, ${brandColor} 12%, transparent); }
         .border-brand { border-color: ${brandColor}; }
-        .chip-file:hover { background-color: ${brandColor}; color: white; border-color: transparent; }
+        .hover-brand:hover { background-color: ${brandColor} !important; color: white !important; }
+        .hover-brand:hover .icon-child { background-color: white !important; color: ${brandColor} !important; }
+        .group:hover .group-hover-brand { background-color: ${brandColor} !important; color: white !important; border-color: transparent !important; }
       `}} />
 
       {/* Header */}
@@ -149,8 +151,8 @@ export default async function SlugProjectPage({
                       {del.files && del.files.length > 0 && (
                         <div className="flex flex-wrap gap-2 pt-4 border-t border-black/5">
                           {del.files.map((file: any) => (
-                            <a key={file.id} href={`${file.file_url}?download=${encodeURIComponent(file.name)}`} download={file.name} className="inline-flex items-center gap-2 px-3 py-2 bg-white/50 border border-black/5 rounded-xl text-[11px] font-bold text-text-primary hover:bg-brand hover:text-white transition-all shadow-sm group/file">
-                              <div className="w-6 h-6 rounded-lg bg-brand-gradient text-white flex items-center justify-center shrink-0 group-hover/file:bg-white group-hover/file:text-brand transition-colors">
+                            <a key={file.id} href={`${file.file_url}?download=${encodeURIComponent(file.name)}`} download={file.name} className="inline-flex items-center gap-2 px-3 py-2 bg-white/50 border border-black/5 rounded-xl text-[11px] font-bold text-text-primary transition-all shadow-sm group/file hover-brand">
+                              <div className="w-6 h-6 rounded-lg bg-brand-gradient text-white flex items-center justify-center shrink-0 transition-colors icon-child">
                                 {getFileIcon(file.name, file.file_url)}
                               </div>
                               {file.name}
@@ -189,7 +191,7 @@ export default async function SlugProjectPage({
                       </p>
                     </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full border border-black/[0.1] flex items-center justify-center text-text-secondary group-hover:bg-brand group-hover:text-white group-hover:border-transparent transition-all">
+                  <div className="w-8 h-8 rounded-full border border-black/[0.1] flex items-center justify-center text-text-secondary transition-all group-hover-brand">
                     <Download size={14} />
                   </div>
                 </a>
