@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent } from '@/components/ui/card'
-import { Building2, Phone, Mail } from 'lucide-react'
+import { Building2, Phone, Mail, CircleUserRound } from 'lucide-react'
 import { ClientFormDialog } from './ClientFormDialog'
 import { ClientCardActions } from './ClientCardActions'
 import Link from 'next/link'
@@ -40,39 +40,47 @@ export default async function ClientesPage() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {clients.map(client => (
               <div key={client.id} className="relative group">
-                <Link href={`/clientes/${client.id}`} className="block h-full">
-                  <Card className="h-full border-0 shadow-card-subtle bg-surface hover:shadow-md transition-shadow relative z-0">
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="pr-16">
-                          <h3 className="font-semibold text-lg hover:text-primary transition-colors">{client.name}</h3>
+                <Link href={`/clientes/${client.id}`} className="block h-full relative">
+                  <Card className="h-full border-0 shadow-card-subtle bg-surface hover:shadow-lg transition-all duration-300 relative z-0 overflow-hidden rounded-[24px]">
+                    {/* Background Watermark Icon - Balanced size and thickness */}
+                    <div className="absolute -bottom-12 -right-8 text-primary/10 pointer-events-none z-0">
+                      <CircleUserRound size={240} strokeWidth={2} />
+                    </div>
+                    
+                    <CardContent className="p-6 sm:p-8 relative z-10">
+                      <div className="flex justify-between items-start mb-6">
+                        <div className="pr-12">
+                          <h3 className="font-bold text-[22px] leading-tight text-foreground tracking-tight mb-2">
+                            {client.name}
+                          </h3>
                           {client.company && (
-                            <div className="flex items-center text-sm text-text-secondary mt-1 gap-1.5">
-                              <Building2 size={14} />
+                            <div className="flex items-center text-[15px] text-text-primary gap-2">
+                              <Building2 size={16} strokeWidth={1.5} className="text-foreground/80" />
                               {client.company}
                             </div>
                           )}
                         </div>
-                        <div className={`text-xs px-2 py-1 rounded-full ${client.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                        <div className={`text-[12px] font-medium px-3 py-1 rounded-full border bg-white/80 backdrop-blur-sm ${client.status === 'active' ? 'border-green-200 text-green-700' : 'border-gray-200 text-gray-600'}`}>
                           {client.status === 'active' ? 'Ativo' : 'Inativo'}
                         </div>
                       </div>
-                      <div className="space-y-2 text-sm text-text-secondary">
+                      
+                      <div className="space-y-3 pt-3">
                         {client.email && (
-                          <div className="flex items-center gap-2">
-                             <Mail size={14} />
+                          <div className="flex items-center gap-3 text-[15px] text-text-primary">
+                             <Mail size={16} strokeWidth={1.5} className="text-foreground/80" />
                              {client.email}
                           </div>
                         )}
                         {client.phone && (
-                          <div className="flex items-center gap-2">
-                             <Phone size={14} />
+                          <div className="flex items-center gap-3 text-[15px] text-text-primary">
+                             <Phone size={16} strokeWidth={1.5} className="text-foreground/80" />
                              {client.phone}
                           </div>
                         )}
                       </div>
                       {client.notes && (
-                        <div className="mt-4 text-sm bg-background p-3 rounded-md line-clamp-2">
+                        <div className="mt-4 text-sm bg-background/80 backdrop-blur-sm p-3 rounded-md line-clamp-2">
                            {client.notes}
                         </div>
                       )}
@@ -80,7 +88,7 @@ export default async function ClientesPage() {
                   </Card>
                 </Link>
 
-                <div className="absolute top-4 right-20 z-10 flex">
+                <div className="absolute top-6 right-[90px] sm:top-8 sm:right-[100px] z-10 flex">
                   <ClientCardActions client={client} />
                 </div>
               </div>

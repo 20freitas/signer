@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { Card, CardContent } from '@/components/ui/card'
-import { FolderKanban, Calendar as CalendarIcon, ArrowRight } from 'lucide-react'
+import { Folder, User, Calendar as CalendarIcon, ArrowRight } from 'lucide-react'
 import { ProjectFormDialog } from './ProjectFormDialog'
 import Link from 'next/link'
 
@@ -50,29 +50,40 @@ export default async function ProjetosPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {projects.map(project => (
-              <Link key={project.id} href={`/projetos/${project.id}`}>
-                <Card className="border-0 shadow-card-subtle bg-surface hover:shadow-md transition-shadow cursor-pointer h-full">
-                  <CardContent className="p-6 flex flex-col h-full">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="bg-primary/10 p-2 rounded-md text-primary">
-                        <FolderKanban size={18} />
+              <Link key={project.id} href={`/projetos/${project.id}`} className="block h-full relative group">
+                <Card className="h-full border-0 shadow-card-subtle bg-surface hover:shadow-lg transition-all duration-300 relative z-0 overflow-hidden rounded-[24px]">
+                  {/* Background Watermark Icon - Switched to simple Folder for clean aesthetics */}
+                  <div className="absolute -bottom-12 -right-12 text-primary/10 pointer-events-none z-0">
+                    <Folder size={240} strokeWidth={2} />
+                  </div>
+                  
+                  <CardContent className="p-6 sm:p-8 relative z-10 flex flex-col h-full">
+                    <div className="flex justify-between items-start mb-6 flex-grow">
+                      <div className="pr-6">
+                        <h3 className="font-bold text-[22px] leading-tight text-foreground tracking-tight line-clamp-2">
+                          {project.name}
+                        </h3>
                       </div>
-                      <div className={`text-xs px-2 py-1 rounded-full ${project.status === 'in_progress' ? 'bg-blue-100 text-blue-700' : project.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                      <div className={`text-[12px] whitespace-nowrap font-medium px-3 py-1 rounded-full border bg-white/80 backdrop-blur-sm shadow-sm ${project.status === 'in_progress' ? 'border-blue-200 text-blue-700' : project.status === 'completed' ? 'border-green-200 text-green-700' : 'border-yellow-200 text-yellow-700'}`}>
                         {project.status === 'in_progress' ? 'Em curso' : project.status === 'completed' ? 'Concluído' : 'Em pausa'}
                       </div>
                     </div>
                     
-                    <h3 className="font-semibold text-lg line-clamp-1">{project.name}</h3>
-                    <p className="text-sm text-text-secondary mt-1 line-clamp-1">
-                      {project.clients?.name || 'Cliente desconhecido'}
-                    </p>
-                    
-                    <div className="mt-auto pt-6 flex items-center justify-between text-xs text-text-secondary">
-                      <div className="flex items-center gap-1.5">
-                        <CalendarIcon size={14} />
-                        {project.due_date ? new Date(project.due_date).toLocaleDateString('pt-PT') : 'Sem data límite'}
+                    <div className="mt-auto pt-4 flex flex-col gap-3">
+                      {project.clients?.name && (
+                        <div className="flex items-center text-[15px] text-text-primary gap-2">
+                          <User size={16} strokeWidth={1.5} className="text-foreground/80" />
+                          {project.clients.name}
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center justify-between text-[15px] text-text-secondary">
+                        <div className="flex items-center gap-2">
+                          <CalendarIcon size={16} strokeWidth={1.5} className="text-foreground/80" />
+                          {project.due_date ? new Date(project.due_date).toLocaleDateString('pt-PT') : 'Sem data límite'}
+                        </div>
+                        <ArrowRight size={16} strokeWidth={1.5} className="text-primary/50 group-hover:text-primary transition-colors" />
                       </div>
-                      <ArrowRight size={14} className="text-primary opacity-50" />
                     </div>
                   </CardContent>
                 </Card>

@@ -24,7 +24,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <main className="flex-1 p-6 md:p-10 min-w-0">
         {children}
       </main>
-      <DashboardDock />
+      <DashboardDock userEmail={user.email} />
     </div>
   )
 }
+
