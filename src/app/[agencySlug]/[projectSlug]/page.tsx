@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { format } from 'date-fns'
 import { pt } from 'date-fns/locale'
-import { File, Download, Calendar, Paperclip, CheckCircle2 } from 'lucide-react'
+import { File, Download, Calendar, Paperclip, CheckCircle2, FileText, Image as ImageIcon, Video, Music, Package } from 'lucide-react'
 
 export default async function SlugProjectPage({ 
   params 
@@ -43,8 +43,21 @@ export default async function SlugProjectPage({
     (a: any, b: any) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
   )
   
-  // Fetch files separately or ensure they are properly aliased
-  const generalFiles = (project.projects_files || []).filter((f: any) => !f.deliverable_id)
+  // Show ALL files for a complete list, or just general ones as per preference
+  const generalFiles = project.projects_files || []
+
+  function getFileIcon(filename: string, fileUrl?: string) {
+    // Try to get extension from filename, or from URL if filename lacks a dot
+    const target = filename.includes('.') ? filename : (fileUrl || '')
+    const ext = target.split('.').pop()?.split('?')[0].toLowerCase() || ''
+    
+    if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext)) return <ImageIcon size={18} />
+    if (['mp4', 'mov', 'avi', 'mkv'].includes(ext)) return <Video size={18} />
+    if (['pdf', 'doc', 'docx', 'txt', 'rtf'].includes(ext)) return <FileText size={18} />
+    if (['zip', 'rar', '7z', 'tar'].includes(ext)) return <Package size={18} />
+    if (['mp3', 'wav', 'ogg'].includes(ext)) return <Music size={18} />
+    return <File size={18} />
+  }
 
   return (
     <div style={{ backgroundColor: brandBg, minHeight: '100vh' }}>
@@ -52,6 +65,9 @@ export default async function SlugProjectPage({
         :root { --brand: ${brandColor}; }
         .c-brand  { color: ${brandColor}; }
         .bg-brand { background-color: ${brandColor}; }
+        .bg-brand-gradient { 
+          background: linear-gradient(135deg, ${brandColor}, color-mix(in srgb, ${brandColor}, white 20%)); 
+        }
         .bg-brand-soft { background-color: color-mix(in srgb, ${brandColor} 12%, transparent); }
         .border-brand { border-color: ${brandColor}; }
         .chip-file:hover { background-color: ${brandColor}; color: white; border-color: transparent; }
@@ -133,8 +149,10 @@ export default async function SlugProjectPage({
                       {del.files && del.files.length > 0 && (
                         <div className="flex flex-wrap gap-2 pt-4 border-t border-black/5">
                           {del.files.map((file: any) => (
-                            <a key={file.id} href={`${file.file_url}?download=${encodeURIComponent(file.name)}`} download={file.name} className="chip-file inline-flex items-center gap-1.5 px-3 py-2 bg-white border border-black/5 rounded-xl text-[11px] font-semibold text-text-primary hover:bg-brand hover:text-white transition-all shadow-sm">
-                              <Paperclip size={12} />
+                            <a key={file.id} href={`${file.file_url}?download=${encodeURIComponent(file.name)}`} download={file.name} className="inline-flex items-center gap-2 px-3 py-2 bg-white/50 border border-black/5 rounded-xl text-[11px] font-bold text-text-primary hover:bg-brand hover:text-white transition-all shadow-sm group/file">
+                              <div className="w-6 h-6 rounded-lg bg-brand-gradient text-white flex items-center justify-center shrink-0 group-hover/file:bg-white group-hover/file:text-brand transition-colors">
+                                {getFileIcon(file.name, file.file_url)}
+                              </div>
                               {file.name}
                             </a>
                           ))}
@@ -160,9 +178,9 @@ export default async function SlugProjectPage({
             <div className="space-y-3">
               {generalFiles.map((file: any) => (
                 <a key={file.id} href={`${file.file_url}?download=${encodeURIComponent(file.name)}`} download={file.name} className="flex items-center justify-between p-4 bg-white/50 border border-black/[0.03] rounded-2xl hover:bg-white transition-all shadow-sm group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-brand text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-                      <File size={18} />
+                  <div className="flex items-center gap-4">
+                    <div className="w-11 h-11 rounded-2xl bg-brand-gradient text-white flex items-center justify-center shadow-lg shadow-brand/10 group-hover:scale-105 transition-transform">
+                      {getFileIcon(file.name, file.file_url)}
                     </div>
                     <div>
                       <p className="text-sm font-bold text-text-primary truncate max-w-[200px] sm:max-w-xs">{file.name}</p>
@@ -171,7 +189,7 @@ export default async function SlugProjectPage({
                       </p>
                     </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full border border-black/[0.05] flex items-center justify-center text-text-secondary group-hover:c-brand transition-colors">
+                  <div className="w-8 h-8 rounded-full border border-black/[0.1] flex items-center justify-center text-text-secondary group-hover:bg-brand group-hover:text-white group-hover:border-transparent transition-all">
                     <Download size={14} />
                   </div>
                 </a>

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ImagePlus, Loader2, Save, CheckCircle2, Link as LinkIcon, RefreshCw } from 'lucide-react'
+import { ImagePlus, Loader2, Save, CheckCircle2, Link as LinkIcon, RefreshCw, FileText, Image as ImageIcon, Package, Download } from 'lucide-react'
 import { slugify } from '@/lib/slugify'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -323,16 +323,25 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
                           </h3>
                           
                           <div className="space-y-3">
-                             {['Contrato_Assinado.pdf', 'Manual_Marca.zip'].map((file) => (
-                               <div key={file} className="flex items-center justify-between p-4 bg-white/50 border border-black/[0.03] rounded-2xl">
+                             {[
+                               { name: 'Contrato_Assinado.pdf', icon: <FileText size={16} /> },
+                               { name: 'Manual_Marca.zip', icon: <Package size={16} /> },
+                               { name: 'Assets_Branding.jpg', icon: <ImageIcon size={16} /> }
+                             ].map((file) => (
+                               <div key={file.name} className="flex items-center justify-between p-4 bg-white/50 border border-black/[0.03] rounded-2xl">
                                  <div className="flex items-center gap-3">
-                                   <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white" style={{ backgroundColor: 'var(--brand-color)' }}>
-                                      <Save size={16} />
+                                   <div 
+                                     className="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm"
+                                     style={{ 
+                                       background: `linear-gradient(135deg, ${primaryColor}, color-mix(in srgb, ${primaryColor}, white 20%))` 
+                                     }}
+                                   >
+                                      {file.icon}
                                    </div>
-                                   <span className="text-sm font-bold text-[#0f172a]">{file}</span>
+                                   <span className="text-sm font-bold text-[#0f172a]">{file.name}</span>
                                  </div>
                                  <div className="w-8 h-8 rounded-full border border-black/[0.05] flex items-center justify-center text-text-secondary">
-                                   <Save size={12} />
+                                   <Download size={12} />
                                  </div>
                                </div>
                              ))}

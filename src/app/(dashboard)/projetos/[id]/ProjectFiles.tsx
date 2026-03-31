@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent } from '@/components/ui/card'
-import { File, Upload, Trash2, Loader2, Download, Pencil, Search, SlidersHorizontal, Tag } from 'lucide-react'
+import { File, Upload, Trash2, Loader2, Download, Pencil, Search, SlidersHorizontal, Tag, FileText, Image as ImageIcon, Video, Music, Package } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -171,6 +171,18 @@ export function ProjectFiles({ projectId, userId }: { projectId: string, userId:
       }
     })
 
+  function getFileIcon(filename: string, fileUrl?: string) {
+    const target = filename.includes('.') ? filename : (fileUrl || '')
+    const ext = target.split('.').pop()?.split('?')[0].toLowerCase() || ''
+    
+    if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(ext)) return <ImageIcon size={20} className="relative z-10" />
+    if (['mp4', 'mov', 'avi', 'mkv'].includes(ext)) return <Video size={20} className="relative z-10" />
+    if (['pdf', 'doc', 'docx', 'txt', 'rtf'].includes(ext)) return <FileText size={20} className="relative z-10" />
+    if (['zip', 'rar', '7z', 'tar'].includes(ext)) return <Package size={20} className="relative z-10" />
+    if (['mp3', 'wav', 'ogg'].includes(ext)) return <Music size={20} className="relative z-10" />
+    return <File size={20} className="relative z-10" />
+  }
+
   return (
     <Card className="border-0 shadow-card-subtle bg-surface">
       <CardContent className="p-6">
@@ -249,8 +261,8 @@ export function ProjectFiles({ projectId, userId }: { projectId: string, userId:
              {processedFiles.map(file => (
                <div key={file.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-xl border border-border/60 bg-background transition-shadow hover:shadow-sm gap-3 sm:gap-0 group">
                  <div className="flex items-center gap-3 overflow-hidden">
-                   <div className="p-2.5 bg-gradient-to-br from-accent to-accent-light rounded-lg text-white shrink-0 shadow-sm relative overflow-hidden group-hover:shadow-md transition-all">
-                     <File size={20} className="relative z-10" />
+                   <div className="p-2.5 bg-gradient-to-br from-primary to-primary-light rounded-lg text-white shrink-0 shadow-sm relative overflow-hidden group-hover:shadow-md transition-all">
+                     {getFileIcon(file.name, file.file_url)}
                    </div>
                    <div className="min-w-0">
                      <div className="flex items-center gap-2">
