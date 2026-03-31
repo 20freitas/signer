@@ -53,7 +53,7 @@ export default async function ProjectDetailPage({ params }: { params: { id: stri
         </TabsList>
         
         <TabsContent value="entregas" className="mt-6">
-          <ProjectDeliverables projectId={project.id} userId={user.id} />
+          <ProjectDeliverables projectId={project.id} userId={user.id} projectDueDate={project.due_date} />
         </TabsContent>
 
         <TabsContent value="detalhes" className="mt-6 space-y-6">

@@ -13,11 +13,13 @@ import { createClient } from '@/lib/supabase/client'
 
 export function DeliverableFormDialog({ 
   projectId, 
+  projectDueDate,
   deliverable, 
   customTrigger,
   onSuccess
 }: { 
   projectId: string, 
+  projectDueDate?: string,
   deliverable?: any, 
   customTrigger?: React.ReactNode,
   onSuccess?: () => void
@@ -66,9 +68,17 @@ export function DeliverableFormDialog({
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) throw new Error("Sem sessão")
 
-      const dueDate = formData.get('due_date') 
-        ? new Date(formData.get('due_date') as string).toISOString() 
-        : new Date().toISOString() // fallback
+      const dueDateValue = formData.get('due_date') as string
+      const selectedDate = dueDateValue ? new Date(dueDateValue) : new Date()
+
+      // Validation: Milestone date cannot be after project due date
+      if (projectDueDate && selectedDate > new Date(projectDueDate)) {
+        alert('A data da entrega não pode ser posterior à data final do projeto (' + new Date(projectDueDate).toLocaleDateString('pt-PT') + ').')
+        setLoading(false)
+        return
+      }
+
+      const dueDate = selectedDate.toISOString()
 
       let currentDeliverableId = deliverable?.id;
 
@@ -172,6 +182,7 @@ export function DeliverableFormDialog({
                 <Input 
                   id="due_date" name="due_date" type="date" required 
                   defaultValue={defaultDate}
+                  max={projectDueDate ? new Date(projectDueDate).toISOString().split('T')[0] : undefined}
                   className="h-10 bg-background/50 border-border/60 hover:border-border focus:bg-background transition-colors w-full select-none"
                 />
               </div>

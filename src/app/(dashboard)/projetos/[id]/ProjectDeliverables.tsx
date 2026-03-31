@@ -8,7 +8,15 @@ import { Button } from '@/components/ui/button'
 import { format, isBefore, startOfDay } from 'date-fns'
 import { pt } from 'date-fns/locale'
 
-export function ProjectDeliverables({ projectId, userId }: { projectId: string, userId: string }) {
+export function ProjectDeliverables({ 
+  projectId, 
+  userId, 
+  projectDueDate 
+}: { 
+  projectId: string, 
+  userId: string, 
+  projectDueDate?: string 
+}) {
   const [deliverables, setDeliverables] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -121,7 +129,11 @@ export function ProjectDeliverables({ projectId, userId }: { projectId: string, 
           </h2>
           <p className="text-sm text-text-secondary mt-1">Organize o plano do projeto com objetivos e as suas datas limites.</p>
         </div>
-        <DeliverableFormDialog projectId={projectId} onSuccess={fetchDeliverables} />
+        <DeliverableFormDialog 
+          projectId={projectId} 
+          projectDueDate={projectDueDate}
+          onSuccess={fetchDeliverables} 
+        />
       </div>
 
       {deliverables.length === 0 ? (
@@ -227,6 +239,7 @@ export function ProjectDeliverables({ projectId, userId }: { projectId: string, 
                     <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                       <DeliverableFormDialog 
                         projectId={projectId} 
+                        projectDueDate={projectDueDate}
                         deliverable={deliverable}
                         onSuccess={fetchDeliverables}
                         customTrigger={
