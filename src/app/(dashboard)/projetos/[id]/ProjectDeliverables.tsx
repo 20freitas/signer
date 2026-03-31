@@ -45,27 +45,33 @@ export function ProjectDeliverables({ projectId, userId }: { projectId: string, 
   }, [projectId])
 
   async function fetchDeliverables() {
-    // Fetch deliverables and their linked files in one query
-    const { data, error } = await supabase
-      .from('project_deliverables')
-      .select('*, files(id, name, file_url)')
-      .eq('project_id', projectId)
-      .order('due_date', { ascending: true, nullsFirst: false })
+    try {
+      setLoading(true)
+      // Fetch deliverables and their linked files in one query
+      const { data, error } = await supabase
+        .from('project_deliverables')
+        .select('*, files(id, name, file_url)')
+        .eq('project_id', projectId)
+        .order('due_date', { ascending: true, nullsFirst: false })
 
-    if (error) {
-       console.error("Error fetching deliverables:", error)
-    }
+      if (error) {
+         console.error("Error fetching deliverables:", error)
+      }
 
-    if (!error && data) {
-      // Client-side sort to ensure correct order
-      const sorted = [...data].sort((a, b) => {
-        if (!a.due_date) return 1
-        if (!b.due_date) return -1
-        return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-      })
-      setDeliverables(sorted)
+      if (!error && data) {
+        // Client-side sort to ensure correct order
+        const sorted = [...data].sort((a, b) => {
+          if (!a.due_date) return 1
+          if (!b.due_date) return -1
+          return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+        })
+        setDeliverables(sorted)
+      }
+    } catch (err: any) {
+      console.error("Critical error in fetchDeliverables:", err)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   async function handleDelete(id: string) {

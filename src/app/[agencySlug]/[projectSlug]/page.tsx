@@ -1,18 +1,34 @@
 import { createClient } from '@/lib/supabase/server'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { format } from 'date-fns'
 import { pt } from 'date-fns/locale'
 import { File, Download, Calendar, Paperclip, CheckCircle2 } from 'lucide-react'
 
-export default async function PublicProjectPage({ params }: { params: { token: string } }) {
+export default async function SlugProjectPage({ 
+  params 
+}: { 
+  params: { agencySlug: string; projectSlug: string } 
+}) {
   const supabase = await createClient()
 
-  // 1. Fetch Project by Token
+  // 1. Find agency by slug
+  const { data: branding, error: brandingError } = await supabase
+    .from('user_branding')
+    .select('*')
+    .eq('slug', params.agencySlug)
+    .single()
+
+  if (!branding || brandingError) {
+    return notFound()
+  }
+
+  // 2. Find project by user_id and project slug
   const { data: project, error: projectError } = await supabase
     .from('projects')
     .select('*, deliverables:project_deliverables(*, files:files(id, name, file_url, size, deliverable_id)), projects_files:files(id, name, file_url, size, deliverable_id)')
-    .eq('share_token', params.token)
+    .eq('user_id', branding.user_id)
+    .eq('slug', params.projectSlug)
     .eq('share_active', true)
     .single()
 
@@ -20,24 +36,14 @@ export default async function PublicProjectPage({ params }: { params: { token: s
     return notFound()
   }
 
-  // 2. Fetch Branding
-  const { data: branding } = await supabase
-    .from('user_branding')
-    .select('*')
-    .eq('user_id', project.user_id)
-    .single()
-
-  // 3. Redirect to professional slug URL if both agency and project have slugs
-  if (branding?.slug && project.slug) {
-    return redirect(`/${branding.slug}/${project.slug}`)
-  }
-
-  const brandColor = branding?.primary_color || '#2563eb'
-  const brandBg = branding?.secondary_color || '#fdfcfb'
+  const brandColor = branding.primary_color || '#2563eb'
+  const brandBg = branding.secondary_color || '#fdfcfb'
 
   const deliverables = (project.deliverables || []).sort(
     (a: any, b: any) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
   )
+  
+  // Fetch files separately or ensure they are properly aliased
   const generalFiles = (project.projects_files || []).filter((f: any) => !f.deliverable_id)
 
   return (
@@ -54,13 +60,13 @@ export default async function PublicProjectPage({ params }: { params: { token: s
       {/* Header */}
       <header className="sticky top-0 z-30 w-full backdrop-blur-md border-b border-black/5 bg-white/80">
         <div className="max-w-[800px] mx-auto px-6 h-[60px] flex items-center">
-          {branding?.logo_url ? (
+          {branding.logo_url ? (
             <div className="relative h-[30px] w-[96px]">
               <Image src={branding.logo_url} alt={branding.agency_name || 'Logo'} fill className="object-contain object-left" unoptimized />
             </div>
           ) : (
             <span className="text-base font-extrabold tracking-tight c-brand">
-              {branding?.agency_name || 'Portal do Cliente'}
+              {branding.agency_name || 'Portal do Cliente'}
             </span>
           )}
         </div>
@@ -85,7 +91,7 @@ export default async function PublicProjectPage({ params }: { params: { token: s
             {project.name}
           </h1>
 
-          {branding?.agency_description && (
+          {branding.agency_description && (
             <p className="text-sm text-text-secondary leading-relaxed max-w-xl">
               {branding.agency_description}
             </p>
@@ -161,7 +167,7 @@ export default async function PublicProjectPage({ params }: { params: { token: s
                     <div>
                       <p className="text-sm font-bold text-text-primary truncate max-w-[200px] sm:max-w-xs">{file.name}</p>
                       <p className="text-[10px] text-text-secondary uppercase font-bold tracking-wider opacity-60">
-                         {(file.size / 1024 / 1024).toFixed(2)} MB
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
                   </div>
@@ -178,7 +184,7 @@ export default async function PublicProjectPage({ params }: { params: { token: s
       {/* Footer */}
       <footer className="py-12 border-t border-black/5 flex flex-col items-center gap-4">
         <p className="text-[11px] font-medium text-text-secondary opacity-60">
-          © {new Date().getFullYear()} {branding?.agency_name || 'Agência'}. Todos os direitos reservados.
+          © {new Date().getFullYear()} {branding.agency_name || 'Agência'}. Todos os direitos reservados.
         </p>
         <div className="flex items-center gap-2 px-4 py-2 bg-white/60 rounded-full border border-black/5 shadow-sm opacity-70 hover:opacity-100 transition-opacity">
           <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest">Powered by</span>

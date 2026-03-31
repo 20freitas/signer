@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ImagePlus, Smartphone, Monitor, Loader2, Save, CheckCircle2 } from 'lucide-react'
+import { ImagePlus, Loader2, Save, CheckCircle2, Link as LinkIcon, RefreshCw } from 'lucide-react'
+import { slugify } from '@/lib/slugify'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
@@ -19,7 +20,6 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
   // States
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop')
   const [saved, setSaved] = useState(false)
   
   // Branding Variables
@@ -28,6 +28,7 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
   const [primaryColor, setPrimaryColor] = useState(initialData?.primary_color || '#2563eb')
   const [secondaryColor, setSecondaryColor] = useState(initialData?.secondary_color || '#fdfcfb')
   const [logoUrl, setLogoUrl] = useState(initialData?.logo_url || '')
+  const [agencySlug, setAgencySlug] = useState(initialData?.slug || '')
 
   // Handle Logo Upload
   async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -62,6 +63,7 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
         primary_color: primaryColor,
         secondary_color: secondaryColor,
         logo_url: logoUrl,
+        slug: agencySlug.trim() || null,
         updated_at: new Date().toISOString()
       }
 
@@ -86,11 +88,10 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
     }
   }
 
-  // Preview CSS Variables
   const previewStyle = {
     '--brand-color': primaryColor,
     '--brand-bg': secondaryColor,
-  } as React.CSSProperties
+  } as any
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 h-[calc(100vh-140px)] animate-in fade-in duration-500">
@@ -140,6 +141,40 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
                 placeholder="Exemplo Studio" 
                 className="bg-background/50 border-border/60 focus:bg-background h-10"
               />
+            </div>
+
+            <div className="space-y-2 pt-2 border-t border-border/40">
+              <div className="flex items-center justify-between">
+                <Label className="font-semibold text-text-secondary uppercase tracking-wider text-[11px]">URL da Agência (Slug)</Label>
+                <button
+                  type="button"
+                  onClick={() => setAgencySlug(slugify(agencyName))}
+                  className="inline-flex items-center gap-1 text-[10px] font-semibold text-primary hover:text-primary/80 transition-colors"
+                  title="Gerar automaticamente a partir do nome"
+                >
+                  <RefreshCw size={11} />
+                  Auto-gerar
+                </button>
+              </div>
+              <div className="flex items-center gap-0 rounded-lg border border-border/60 overflow-hidden bg-background/50 focus-within:ring-1 focus-within:ring-primary/30 focus-within:border-primary/50">
+                <span className="px-3 py-2 text-[11px] text-text-secondary/60 bg-surface border-r border-border/40 shrink-0 font-mono select-none">
+                  signer.pt/
+                </span>
+                <input
+                  type="text"
+                  value={agencySlug}
+                  onChange={e => setAgencySlug(slugify(e.target.value))}
+                  placeholder="minha-agencia"
+                  className="flex-1 px-3 py-2 text-sm font-mono bg-transparent outline-none text-text-primary placeholder:text-text-secondary/40"
+                />
+              </div>
+              <p className="text-[10px] text-text-secondary">Este será o identificador principal nos links dos teus projetos.</p>
+              {agencySlug && (
+                <p className="text-[10px] text-text-secondary/60 flex items-center gap-1 mt-1">
+                  <LinkIcon size={10} />
+                  Exemplo: <span className="font-mono text-primary/80">signer.pt/{agencySlug}/nome-projeto</span>
+                </p>
+              )}
             </div>
             
             <div className="space-y-4 pt-2 border-t border-border/40">
@@ -211,121 +246,110 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
             <span className="w-3 h-3 rounded-full bg-green-400"></span>
             <span className="ml-4 text-xs font-semibold text-text-secondary uppercase tracking-wider">Live Preview</span>
           </div>
-          
-          <Tabs value={previewMode} onValueChange={(v) => setPreviewMode(v as any)} className="w-[200px]">
-            <TabsList className="grid w-full grid-cols-2 h-9 p-1 bg-surface border">
-              <TabsTrigger value="desktop" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary"><Monitor className="w-3.5 h-3.5 mr-1.5" />PC</TabsTrigger>
-              <TabsTrigger value="mobile" className="text-xs data-[state=active]:bg-primary/10 data-[state=active]:text-primary"><Smartphone className="w-3.5 h-3.5 mr-1.5" />Móvel</TabsTrigger>
-            </TabsList>
-          </Tabs>
         </div>
 
         {/* Render Environment Constraint */}
-        <div className="flex-1 overflow-hidden bg-black/5 flex justify-center items-center py-6 sm:py-10 px-4 transition-all duration-500 ease-in-out">
-           
+        <div className="flex-1 overflow-hidden bg-black/5 flex justify-center items-center py-6 sm:py-10 px-4">
            <div 
-             className={`transition-all duration-500 ease-in-out relative shadow-2xl flex flex-col ${
-               previewMode === 'mobile' 
-                 ? 'w-[375px] h-[760px] rounded-[3.5rem] border-[14px] border-gray-900 bg-gray-900 overflow-hidden scale-[0.75] md:scale-90 lg:scale-100' 
-                 : 'w-full h-full max-w-6xl rounded-2xl border border-border bg-background'
-             }`}
+             className="w-full h-full max-w-6xl rounded-2xl border border-border shadow-2xl overflow-hidden flex flex-col"
              style={{
-               ...previewStyle,
-               backgroundColor: 'var(--brand-bg)'
+               backgroundColor: secondaryColor
              }}
            >
-              {/* Fake Notch for Mobile */}
-              {previewMode === 'mobile' && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-7 bg-gray-900 rounded-b-3xl z-[60] flex items-center justify-center">
-                  <div className="w-12 h-1 bg-gray-800 rounded-full"></div>
-                </div>
-              )}
-
-              {/* Internal Content Scroller */}
-              <div className="flex-1 overflow-y-auto styled-scrollbar w-full h-full relative">
+              <div className="flex-1 overflow-y-auto styled-scrollbar w-full h-full relative" style={previewStyle}>
                  {/* --- MOCK CLIENT PORTAL --- */}
-                 <div className={`min-h-full pb-10 ${previewMode === 'mobile' ? 'px-2' : ''}`}>
+                 <div className="min-h-full pb-10 flex flex-col">
                     {/* Fake Header */}
-                    <header className={`px-6 sm:px-10 py-6 ${previewMode === 'mobile' ? 'pt-12' : ''} border-b border-border/50 flex flex-col sm:flex-row gap-4 items-center justify-between`}>
-                       <div className="flex items-center justify-center sm:justify-start">
+                    <header className="px-6 sm:px-10 py-6 border-b border-black/5 flex items-center justify-between bg-white/70 backdrop-blur-md sticky top-0 z-20">
+                       <div className="flex items-center">
                           {logoUrl ? (
-                            <div className="relative h-10 w-32"><Image src={logoUrl} alt="Logo" fill className="object-contain object-center sm:object-left" /></div>
+                            <div className="relative h-8 w-24"><Image src={logoUrl} alt="Logo" fill className="object-contain object-left" /></div>
                           ) : (
-                            <div className="text-xl font-bold tracking-tight" style={{ color: 'var(--brand-color)' }}>
+                            <div className="text-lg font-bold tracking-tight" style={{ color: 'var(--brand-color)' }}>
                                {agencyName || 'Your Logo Here'}
                             </div>
                           )}
                        </div>
-                       {previewMode === 'desktop' && (
-                          <nav className="flex gap-6 text-sm font-medium text-text-secondary">
-                            <span className="text-text-primary">Dashboard</span>
-                            <span>Ficheiros</span>
-                            <span>Contactar</span>
-                          </nav>
-                       )}
                     </header>
 
-                    {/* Fake Hero / Details */}
-                    <div className={`${previewMode === 'mobile' ? 'px-6 py-8' : 'px-6 sm:px-10 py-10'} max-w-3xl`}>
-                       <span 
-                         className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4"
-                         style={{ backgroundColor: 'color-mix(in srgb, var(--brand-color) 15%, transparent)', color: 'var(--brand-color)' }}
-                       >
-                         Em Progresso
-                       </span>
-                       <h2 className={`${previewMode === 'mobile' ? 'text-3xl leading-tight' : 'text-3xl sm:text-4xl'} font-extrabold tracking-tight mb-4`}>Website "Exemplo Global"</h2>
-                       <p className={`text-text-secondary leading-relaxed max-w-2xl mb-8 ${previewMode === 'mobile' ? 'text-sm' : 'text-base'}`}>
-                          {agencyDesc || 'Bem-vindo ao seu portal dedicado. Aqui poderá acompanhar os avanços do seu projeto, submeter feedback e aceder a todos os documentos essenciais assim que aprovados.'}
-                       </p>
+                    {/* Main Mock Content - Single Column */}
+                    <div className="max-w-[800px] w-full mx-auto px-6 py-10 flex-1">
+                       {/* Hero Section */}
+                       <div className="mb-12">
+                          <span 
+                            className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4 border"
+                            style={{ backgroundColor: 'color-mix(in srgb, var(--brand-color) 10%, transparent)', color: 'var(--brand-color)', borderColor: 'color-mix(in srgb, var(--brand-color) 15%, transparent)' }}
+                          >
+                            Em Curso
+                          </span>
+                          <h2 className="text-3xl font-black tracking-tighter mb-4 text-[#0f172a]">Website "Exemplo Global"</h2>
+                          <p className="text-text-secondary leading-relaxed max-w-lg text-sm">
+                             {agencyDesc || 'Bem-vindo ao seu portal dedicado. Aqui poderá acompanhar os avanços do seu projeto em tempo real.'}
+                          </p>
+                       </div>
 
-                       {/* Fake CTA Action */}
-                       <button 
-                         className="px-6 py-2.5 rounded-xl text-white font-bold text-sm transition-opacity hover:opacity-90 shadow-lg"
-                         style={{ backgroundColor: 'var(--brand-color)' }}
-                       >
-                         Ver Faturação
-                       </button>
-                    </div>
+                       {/* Unified List Part 1: Milestones */}
+                       <div className="mb-12">
+                          <h3 className="text-base font-bold mb-6 flex items-center gap-2 text-[#0f172a]">
+                             <div className="w-5 h-5 flex items-center justify-center rounded-full" style={{ backgroundColor: 'color-mix(in srgb, var(--brand-color) 15%, transparent)', color: 'var(--brand-color)' }}>
+                               <CheckCircle2 size={14} />
+                             </div>
+                             Progresso e Metas
+                          </h3>
+                          
+                          <div className="space-y-6 border-l-2 border-black/[0.03] ml-2.5">
+                             {[1, 2].map((i) => (
+                               <div key={i} className="relative pl-7">
+                                 <div className="absolute -left-[11px] top-6 w-4 h-4 rounded-full border-4 border-white shadow-sm" style={{ backgroundColor: i === 1 ? '#22c55e' : 'var(--brand-color)' }}></div>
+                                 <div className="p-5 rounded-2xl bg-white/50 border border-black/[0.03] shadow-sm">
+                                   <div className="flex justify-between items-start mb-2">
+                                      <h4 className="font-bold text-sm text-[#0f172a]">Entrega Milestone {i}</h4>
+                                      <span className="text-[9px] font-bold text-text-secondary">Prazo: 1{i} Março</span>
+                                   </div>
+                                   <p className="text-xs text-text-secondary">Descrição breve desta meta para simular o aspeto final.</p>
+                                 </div>
+                               </div>
+                             ))}
+                          </div>
+                       </div>
 
-                    {/* Fake Milestone timeline */}
-                    <div className={`${previewMode === 'mobile' ? 'px-4' : 'px-6 sm:px-10'} mt-2`}>
-                       <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
-                          <CheckCircle2 className="w-5 h-5" style={{ color: 'var(--brand-color)' }} />
-                          Próximas Entregas
-                       </h3>
-                       
-                       <div className="space-y-4">
-                          {[1, 2].map((i) => (
-                            <div key={i} className="p-4 sm:p-5 rounded-2xl bg-white/40 border border-border/60 shadow-sm transition-all hover:shadow-md">
-                              <div className="flex flex-col sm:flex-row justify-between gap-2 mb-2">
-                                <div className="flex items-center gap-2">
-                                  {i === 1 ? (
-                                     <CheckCircle2 className="w-4 h-4" style={{ color: 'var(--brand-color)' }} />
-                                  ) : (
-                                     <div className="w-4 h-4 rounded-full border-2" style={{ borderColor: 'color-mix(in srgb, var(--brand-color) 40%, transparent)' }}></div>
-                                  )}
-                                  <h4 className={`font-bold ${i === 1 ? 'text-text-primary' : 'text-text-secondary'} ${previewMode === 'mobile' ? 'text-sm' : 'text-base'}`}>
-                                    Entrega Exemplo {i}
-                                  </h4>
-                                </div>
-                                {i === 1 && (
-                                   <span className="text-[10px] bg-green-50 text-green-700 font-black px-2 py-0.5 rounded-full border border-green-200 w-max shrink-0 uppercase">Concluído</span>
-                                )}
-                              </div>
-                              <p className={`text-text-secondary mt-1 pl-6 ${previewMode === 'mobile' ? 'text-xs' : 'text-sm'}`}>Resumo desta entrega de teste para verificar a adaptação das cores em ambiente real.</p>
-                              
-                              {i === 1 && (
-                                <div className="mt-4 pt-4 border-t border-border/50 pl-6 flex flex-wrap gap-2">
-                                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-background border border-border/60 rounded-xl text-[10px] font-bold hover:bg-black/5 transition-colors cursor-pointer shadow-sm">
-                                     📄 preview_file.zip
-                                   </span>
-                                </div>
-                              )}
-                            </div>
-                          ))}
+                       {/* Unified List Part 2: Files */}
+                       <div className="mb-12">
+                          <h3 className="text-base font-bold mb-6 flex items-center gap-2 text-[#0f172a]">
+                             <div className="w-5 h-5 flex items-center justify-center rounded-full" style={{ backgroundColor: 'color-mix(in srgb, var(--brand-color) 15%, transparent)', color: 'var(--brand-color)' }}>
+                               <Save size={14} />
+                             </div>
+                             Documentação Geral
+                          </h3>
+                          
+                          <div className="space-y-3">
+                             {['Contrato_Assinado.pdf', 'Manual_Marca.zip'].map((file) => (
+                               <div key={file} className="flex items-center justify-between p-4 bg-white/50 border border-black/[0.03] rounded-2xl">
+                                 <div className="flex items-center gap-3">
+                                   <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white" style={{ backgroundColor: 'var(--brand-color)' }}>
+                                      <Save size={16} />
+                                   </div>
+                                   <span className="text-sm font-bold text-[#0f172a]">{file}</span>
+                                 </div>
+                                 <div className="w-8 h-8 rounded-full border border-black/[0.05] flex items-center justify-center text-text-secondary">
+                                   <Save size={12} />
+                                 </div>
+                               </div>
+                             ))}
+                          </div>
                        </div>
                     </div>
 
+                    {/* Footer - Made by Signer */}
+                    <footer className="mt-auto py-10 border-t border-black/[0.05] flex flex-col items-center gap-3">
+                       <p className="text-[10px] font-medium text-text-secondary opacity-60 uppercase tracking-widest">
+                          © {new Date().getFullYear()} {agencyName || 'Agência Exemplo'}
+                       </p>
+                       <div className="flex items-center gap-2 px-4 py-2 bg-white/60 rounded-full border border-black/[0.05] shadow-sm">
+                          <span className="text-[9px] font-bold text-text-secondary uppercase tracking-widest opacity-70">Powered by</span>
+                          <Image src="/SIGNER.png" alt="Signer" width={52} height={16} className="grayscale" />
+                       </div>
+                    </footer>
                  </div>
               </div>
            </div>
