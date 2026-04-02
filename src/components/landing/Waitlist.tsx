@@ -51,7 +51,6 @@ export function Waitlist({ initialCount }: WaitlistProps) {
               viewport={{ once: true }}
             >
               <div className="inline-flex items-center gap-2 bg-white/10 px-4 py-2 rounded-full mb-8">
-                <Sparkles className="size-4 text-white" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-white">Oferta de Lançamento</span>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tighter mb-8">
