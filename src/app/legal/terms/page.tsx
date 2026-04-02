@@ -58,7 +58,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-2xl font-black text-text-primary tracking-tight mb-4 uppercase text-xs tracking-widest text-primary">5. Limitação de Responsabilidade</h2>
             <p>
-              O Signer é fornecido "tal como está". Não garantimos que o serviço seja ininterrupto ou isento de erros. Não seremos responsáveis por quaisquer danos indiretos ou perda de dados decorrentes do uso da plataforma.
+              O Signer é fornecido &quot;tal como está&quot;. Não garantimos que o serviço seja ininterrupto ou isento de erros. Não seremos responsáveis por quaisquer danos indiretos ou perda de dados decorrentes do uso da plataforma.
             </p>
           </section>
 

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -13,7 +14,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-24 mb-24">
           <div className="md:col-span-2 space-y-8">
             <Link href="/" className="inline-block">
-              <img src="/SIGNER.png" alt="Signer Logo" className="h-8 w-auto" />
+              <Image src="/SIGNER.png" alt="Signer Logo" width={100} height={32} className="h-8 w-auto" />
             </Link>
             <p className="text-text-secondary font-medium text-lg max-w-sm tracking-tight">
               O ecossistema definitivo para freelancers e agências que querem profissionalizar a gestão de projetos e a relação com os seus clientes.

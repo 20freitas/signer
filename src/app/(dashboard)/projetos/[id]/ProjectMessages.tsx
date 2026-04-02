@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -15,6 +15,12 @@ export function ProjectMessages({ projectId, userId }: { projectId: string, user
   const [content, setContent] = useState('')
   const bottomRef = useRef<HTMLDivElement>(null)
 
+  const fetchMessages = useCallback(async () => {
+    const { data } = await supabase.from('messages').select('*').eq('project_id', projectId).order('created_at', { ascending: true })
+    if (data) setMessages(data)
+    setLoading(false)
+  }, [projectId, supabase])
+
   useEffect(() => {
     fetchMessages()
 
@@ -27,17 +33,7 @@ export function ProjectMessages({ projectId, userId }: { projectId: string, user
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
-  }, [projectId])
-
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  async function fetchMessages() {
-    const { data } = await supabase.from('messages').select('*').eq('project_id', projectId).order('created_at', { ascending: true })
-    if (data) setMessages(data)
-    setLoading(false)
-  }
+  }, [projectId, fetchMessages, supabase])
 
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault()

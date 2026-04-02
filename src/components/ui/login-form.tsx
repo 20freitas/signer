@@ -3,12 +3,13 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function LoginForm() {
     return (
         <div className="flex min-h-[700px] w-full bg-white">
             <div className="w-full hidden md:inline-block relative overflow-hidden">
-                <img className="absolute inset-0 h-full w-full object-cover" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/leftSideImage.png" alt="leftSideImage" />
+                <Image className="absolute inset-0 object-cover" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/leftSideImage.png" alt="leftSideImage" fill priority />
             </div>
         
             <div className="w-full flex flex-col items-center justify-center p-8">
@@ -18,7 +19,7 @@ export default function LoginForm() {
                     <p className="text-sm text-gray-500/90 mt-3 font-medium">Welcome back! Please sign in to continue</p>
         
                     <button type="button" className="w-full mt-8 bg-gray-500/10 flex items-center justify-center h-12 rounded-full hover:bg-gray-500/20 transition-colors">
-                        <img src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleLogo.svg" alt="googleLogo" />
+                        <Image src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleLogo.svg" alt="googleLogo" width={24} height={24} />
                     </button>
         
                     <div className="flex items-center gap-4 w-full my-5">

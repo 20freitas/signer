@@ -282,7 +282,7 @@ export function BrandingWorkspace({ initialData, userId }: { initialData: any, u
                           >
                             Em Curso
                           </span>
-                          <h2 className="text-3xl font-black tracking-tighter mb-4 text-[#0f172a]">Website "Exemplo Global"</h2>
+                          <h2 className="text-3xl font-black tracking-tighter mb-4 text-[#0f172a]">Website &quot;Exemplo Global&quot;</h2>
                           <p className="text-text-secondary leading-relaxed max-w-lg text-sm">
                              {agencyDesc || 'Bem-vindo ao seu portal dedicado. Aqui poderá acompanhar os avanços do seu projeto em tempo real.'}
                           </p>

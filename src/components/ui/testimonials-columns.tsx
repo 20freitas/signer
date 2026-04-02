@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export interface Testimonial {
     text: string;
@@ -37,9 +38,9 @@ export const TestimonialsColumn = (props: {
                     className="p-10 rounded-[32px] border border-black/5 bg-white shadow-xl shadow-primary/5 max-w-xs w-full transition-all duration-300 hover:border-primary/10 hover:shadow-primary/10" 
                     key={i}
                 >
-                  <p className="text-text-secondary font-medium leading-relaxed italic">"{text}"</p>
+                  <p className="text-text-secondary font-medium leading-relaxed italic">&quot;{text}&quot;</p>
                   <div className="flex items-center gap-3 mt-6">
-                    <img
+                    <Image
                       width={40}
                       height={40}
                       src={image}

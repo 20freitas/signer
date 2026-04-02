@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-2xl font-black text-text-primary tracking-tight mb-4 uppercase text-xs tracking-widest text-primary">1. Introdução</h2>
             <p>
-              O Signer ("nós", "nosso") está empenhado em proteger a privacidade dos seus utilizadores. Esta Política de Privacidade descreve como recolhemos, utilizamos e protegemos a sua informação pessoal quando se inscreve na nossa lista de espera ("Waitlist").
+              O Signer (&quot;nós&quot;, &quot;nosso&quot;) está empenhado em proteger a privacidade dos seus utilizadores. Esta Política de Privacidade descreve como recolhemos, utilizamos e protegemos a sua informação pessoal quando se inscreve na nossa lista de espera (&quot;Waitlist&quot;).
             </p>
           </section>
 

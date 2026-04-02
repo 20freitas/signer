@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { resetPassword } from '@/app/actions/auth'
 import { ArrowLeft, MailCheck } from 'lucide-react'
@@ -29,10 +30,12 @@ export default function ForgotPasswordPage() {
     <div className="flex h-screen w-full bg-white font-sans overflow-hidden">
       {/* Left Side: Premium Hero Image */}
       <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
-        <img 
+        <Image 
           src="/auth-hero.png" 
           alt="Studio Workspace" 
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          className="absolute inset-0 object-cover"
+          priority
         />
         <div className="absolute inset-0 bg-primary/20 backdrop-blur-[1px]" />
         
@@ -40,11 +43,17 @@ export default function ForgotPasswordPage() {
         <div className="absolute inset-0 flex items-end p-12 bg-gradient-to-t from-primary/60 to-transparent">
             <div className="bg-white/10 backdrop-blur-2xl border border-white/20 p-8 rounded-[40px] shadow-2xl max-w-lg">
                 <p className="text-white text-2xl font-black tracking-tight leading-tight mb-6">
-                    "Recuperar o acesso ao teu estúdio deve ser tão profissional como as tuas entregas."
+                    &quot;Recuperar o acesso ao teu estúdio deve ser tão profissional como as tuas entregas.&quot;
                 </p>
                 <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-white/20 border border-white/30 overflow-hidden">
-                        <img src="https://i.pravatar.cc/100?img=12" alt="Sarah" className="w-full h-full object-cover" />
+                    <div className="w-12 h-12 rounded-full bg-white/20 border border-white/30 overflow-hidden relative">
+                        <Image 
+                          src="https://i.pravatar.cc/100?img=12" 
+                          alt="Sarah" 
+                          width={48}
+                          height={48}
+                          className="w-full h-full object-cover" 
+                        />
                     </div>
                     <div>
                         <p className="text-white text-sm font-black uppercase tracking-widest">Equipa Signer</p>
@@ -61,7 +70,13 @@ export default function ForgotPasswordPage() {
           {/* Centered Logo */}
           <div className="flex justify-center mb-10">
             <Link href="/">
-              <img src="/SIGNER.png" alt="Signer" className="h-10 w-auto brightness-0" />
+              <Image 
+                src="/SIGNER.png" 
+                alt="Signer" 
+                width={120}
+                height={40}
+                className="h-10 w-auto brightness-0" 
+              />
             </Link>
           </div>
 

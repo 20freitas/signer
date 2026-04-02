@@ -4,6 +4,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Check, X, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const features = [
   {
@@ -92,7 +93,7 @@ export function ComparisonTable() {
                   )}>
                     <div className="flex flex-col items-center gap-3">
                         {comp.id === 'signer' ? (
-                            <img src={comp.icon} alt="Signer Logo" className="h-7 w-auto invert brightness-0" />
+                            <Image src={comp.icon || ''} alt="Signer Logo" width={80} height={28} className="h-7 w-auto invert brightness-0" />
                         ) : (
                             <span className="text-black font-black text-xs uppercase tracking-tighter opacity-40 leading-tight">
                                 {comp.name}

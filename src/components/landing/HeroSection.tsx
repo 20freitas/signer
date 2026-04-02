@@ -3,6 +3,7 @@
 import React from 'react'
 import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, ChevronRight, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
@@ -122,10 +123,13 @@ export function HeroSection({ user }: { user: User | null }) {
                             <div className="relative group">
                                 <div className="absolute -inset-4 bg-primary/10 rounded-[40px] blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-1000" />
                                 <div className="relative bg-white rounded-[32px] border border-black/5 p-3 shadow-2xl shadow-primary/5 ring-1 ring-black/5 overflow-hidden translate-y-0 group-hover:-translate-y-2 transition-transform duration-700">
-                                    <img
+                                    <Image
                                         className="w-full h-auto rounded-[24px]"
                                         src="/dashboard-screenshot.png"
                                         alt="Signer Dashboard Real Interface"
+                                        width={1200}
+                                        height={800}
+                                        priority
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-white/20 to-transparent pointer-events-none" />
                                 </div>
@@ -165,9 +169,11 @@ const HeroHeader = ({ user }: { user: User | null }) => {
                 )}>
                 <div className="flex items-center gap-8">
                     <Link href="/" className="flex items-center gap-2 group">
-                        <img 
+                        <Image 
                             src="/SIGNER.png" 
                             alt="Signer Logo" 
+                            width={120}
+                            height={40}
                             className={cn("w-auto brightness-0", isScrolled ? "h-6 md:h-7" : "h-9 md:h-10")}
                         />
                     </Link>

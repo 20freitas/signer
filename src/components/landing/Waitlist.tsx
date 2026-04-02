@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 import { joinWaitlist } from '@/app/actions/waitlist';
 import { Button } from '@/components/ui/button';
@@ -65,8 +66,8 @@ export function Waitlist({ initialCount }: WaitlistProps) {
                  <div className="flex items-center gap-4 pt-4">
                     <div className="flex -space-x-3">
                         {[1, 2, 3, 4, 5].map((i) => (
-                            <div key={i} className="size-10 rounded-full border-2 border-primary bg-white/20 backdrop-blur-sm shadow-sm flex items-center justify-center overflow-hidden">
-                                <img src={`https://i.pravatar.cc/100?img=${i + 15}`} alt="User avatar" />
+                             <div key={i} className="size-10 rounded-full border-2 border-primary bg-white/20 backdrop-blur-sm shadow-sm flex items-center justify-center overflow-hidden relative">
+                                <Image src={`https://i.pravatar.cc/100?img=${i + 15}`} alt="User avatar" width={40} height={40} className="object-cover" />
                             </div>
                         ))}
                     </div>

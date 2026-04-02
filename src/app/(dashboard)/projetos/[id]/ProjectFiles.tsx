@@ -301,7 +301,7 @@ export function ProjectFiles({ projectId, userId }: { projectId: string, userId:
           <DialogHeader>
             <DialogTitle>Fazer Upload</DialogTitle>
             <DialogDescription>
-              Defina um nome que facilite a identificação deste ficheiro, como "Fotos Entrega 1".
+              Defina um nome que facilite a identificação deste ficheiro, como &quot;Fotos Entrega 1&quot;.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">

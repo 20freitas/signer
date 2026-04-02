@@ -10,6 +10,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Signer - Portal Profissional",
   description: "Gerir clientes e projetos com facilidade.",
+  icons: {
+    icon: '/favicon.png',
+  }
 };
 
 export default function RootLayout({

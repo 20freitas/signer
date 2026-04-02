@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { CheckCircle2, Circle, Clock, Loader2, Pencil, Trash2, Calendar, Target, Paperclip } from 'lucide-react'
 import { DeliverableFormDialog } from './DeliverableFormDialog'
@@ -22,6 +22,36 @@ export function ProjectDeliverables({
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [togglingId, setTogglingId] = useState<string | null>(null)
   const supabase = createClient()
+
+  const fetchDeliverables = useCallback(async () => {
+    try {
+      setLoading(true)
+      // Fetch deliverables and their linked files in one query
+      const { data, error } = await supabase
+        .from('project_deliverables')
+        .select('*, files(id, name, file_url)')
+        .eq('project_id', projectId)
+        .order('due_date', { ascending: true, nullsFirst: false })
+
+      if (error) {
+         console.error("Error fetching deliverables:", error)
+      }
+
+      if (!error && data) {
+        // Client-side sort to ensure correct order
+        const sorted = [...data].sort((a, b) => {
+          if (!a.due_date) return 1
+          if (!b.due_date) return -1
+          return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+        })
+        setDeliverables(sorted)
+      }
+    } catch (err: any) {
+      console.error("Critical error in fetchDeliverables:", err)
+    } finally {
+      setLoading(false)
+    }
+  }, [projectId, supabase])
 
   useEffect(() => {
     fetchDeliverables()
@@ -50,37 +80,7 @@ export function ProjectDeliverables({
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [projectId])
-
-  async function fetchDeliverables() {
-    try {
-      setLoading(true)
-      // Fetch deliverables and their linked files in one query
-      const { data, error } = await supabase
-        .from('project_deliverables')
-        .select('*, files(id, name, file_url)')
-        .eq('project_id', projectId)
-        .order('due_date', { ascending: true, nullsFirst: false })
-
-      if (error) {
-         console.error("Error fetching deliverables:", error)
-      }
-
-      if (!error && data) {
-        // Client-side sort to ensure correct order
-        const sorted = [...data].sort((a, b) => {
-          if (!a.due_date) return 1
-          if (!b.due_date) return -1
-          return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-        })
-        setDeliverables(sorted)
-      }
-    } catch (err: any) {
-      console.error("Critical error in fetchDeliverables:", err)
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [projectId, fetchDeliverables, supabase])
 
   async function handleDelete(id: string) {
     if (!confirm('Tem a certeza que deseja eliminar esta entrega?')) return

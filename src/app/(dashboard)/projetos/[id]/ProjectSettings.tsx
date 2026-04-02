@@ -67,7 +67,7 @@ export function ProjectSettings({ projectId, projectName }: { projectId: string,
         </CardHeader>
         <CardContent className="space-y-4 pt-2">
           <div className="bg-background border border-red-100 p-5 rounded-xl shadow-inner">
-            <h4 className="font-semibold text-[15px] mb-2 text-text-primary">Tem a certeza que quer eliminar "{projectName}"?</h4>
+            <h4 className="font-semibold text-[15px] mb-2 text-text-primary">Tem a certeza que quer eliminar &quot;{projectName}&quot;?</h4>
             <p className="text-sm text-text-secondary mb-5">
               Escreva <strong>{projectName}</strong> no campo de texto para garantir que não elimina acidentalmente enquanto navega.
             </p>
